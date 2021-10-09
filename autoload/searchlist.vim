@@ -45,6 +45,7 @@ function! searchlist#AddEntry() abort
         let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:last_id, {})
         if l:row == s:ZeroBasedToOneBased(l:last_row)
                     \ && l:col == s:ZeroBasedToOneBased(l:last_col)
+            let b:searchlist_index += 1
             return
         endif
     endif
