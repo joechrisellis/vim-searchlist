@@ -1,6 +1,6 @@
 " nvim-searchlist - adds a searchlist to Neovim.
 "
-" Maintainer: Joe Ellis <joechrisellis@gmail.com>
+" Maintainer:   Joe Ellis <joechrisellis@gmail.com>
 " Version:      0.1.0
 " License:      Same terms as Vim itself (see |license|)
 " Location:     plugin/searchlist.vim
@@ -8,7 +8,7 @@
 "
 " Use this command to get help on nvim-searchlist:
 "
-"           :help searchlist
+"     :help searchlist
 
 if exists("g:loaded_searchlist")
     finish
