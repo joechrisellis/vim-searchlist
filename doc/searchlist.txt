@@ -1,0 +1,23 @@
+*nvim-searchlist.txt* Adds a searchlist to Neovim.
+
+Author:  Joe Ellis
+License: Same terms as Vim itself (see |license|)
+
+
+INTRODUCTION                                    *searchlist*
+
+This plugin adds a searchlist to Neovim. The searchlist is similar to the
+jumplist, but instead of storing jumps, it stores the locations where you last
+initiated a search.
+
+
+TODO                                            *searchlist-todo*
+
+In no particular order:
+
+[ ] Complete docs
+[ ] Do not add duplicate entries to the searchlist
+[ ] Find an alternative to `cursor()` that modifies the jumplist
+[ ] Squah bugs
+
+ vim:tw=78:ts=8:ft=help:norl:
