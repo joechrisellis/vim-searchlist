@@ -19,6 +19,17 @@ function! s:ZeroBasedToOneBased(num)
     return a:num + 1
 endfunction
 
+" Converts zero-based values to one-based values. YES, this is an extremely
+" simple function. However, reading s:ZeroBasedToOneBased(x) signals intent
+" far better than just x + 1.
+function! s:OneBasedToZeroBased(num)
+    return a:num - 1
+endfunction
+
+function searchlist#Debug() abort
+    echo b:searchlist_index . " " .  join(b:searchlist)
+endfunction
+
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
@@ -47,7 +58,12 @@ function! searchlist#AddEntry() abort
     " Add the new entry.
     let b:searchlist = get(b:, "searchlist", [])
 
-    let l:id = nvim_buf_set_extmark(0, s:mark_ns, l:row - 1, l:col - 1, {})
+    let l:id = nvim_buf_set_extmark(
+                \ 0,
+                \ s:mark_ns,
+                \ s:OneBasedToZeroBased(l:row),
+                \ s:OneBasedToZeroBased(l:col),
+                \ {})
     call add(b:searchlist, l:id)
 endfunction
 
