@@ -12,12 +12,31 @@
 
 let s:mark_ns = nvim_create_namespace("searchlist")
 
+" Converts zero-based values to one-based values. YES, this is an extremely
+" simple function. However, reading s:ZeroBasedToOneBased(x) signals intent
+" far better than just x + 1.
+function! s:ZeroBasedToOneBased(num)
+    return a:num + 1
+endfunction
+
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
 
+    let l:row = line(".")
+    let l:col = col(".")
+
     " Remove everything beyond our current searchlist index.
     let b:searchlist = b:searchlist[:b:searchlist_index]
+
+    if !empty(b:searchlist)
+        let l:last_id = b:searchlist[-1]
+        let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:last_id, {})
+        if l:row == s:ZeroBasedToOneBased(l:last_row)
+                    \ && l:col == s:ZeroBasedToOneBased(l:last_col)
+            return
+        endif
+    endif
 
     if b:searchlist_index == len(b:searchlist)
         let b:searchlist_index += 1
@@ -26,9 +45,6 @@ function! searchlist#AddEntry() abort
     endif
 
     " Add the new entry.
-    let l:row = line(".")
-    let l:col = col(".")
-
     let b:searchlist = get(b:, "searchlist", [])
 
     let l:id = nvim_buf_set_extmark(0, s:mark_ns, l:row - 1, l:col - 1, {})
@@ -47,7 +63,8 @@ function searchlist#JumpBackwards() abort
     let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
 
     " Move to the entry.
-    call cursor(l:row + 1, l:col + 1)
+    call cursor(s:ZeroBasedToOneBased(l:row),
+                \ s:ZeroBasedToOneBased(l:col))
 endfunction
 
 function searchlist#JumpForwards() abort
@@ -63,5 +80,6 @@ function searchlist#JumpForwards() abort
     let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
 
     " Move to the entry.
-    call cursor(l:row + 1, l:col + 1)
+    call cursor(s:ZeroBasedToOneBased(l:row),
+                \ s:ZeroBasedToOneBased(l:col))
 endfunction
