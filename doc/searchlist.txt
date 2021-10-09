@@ -11,13 +11,88 @@ jumplist, but instead of storing jumps, it stores the locations where you last
 initiated a search.
 
 
+MAPS                                            *searchlist-maps*
+
+The plugin introduces two normal mode maps:
+
+                                                *g\*
+`g\`                    Jump to the previous position in the searchlist.
+
+                                                *g/*
+`g/`                    Jump to the next position in the searchlist.
+
+                                                *searchlist-shadows*
+In order to save positions to the searchlist, the plugin also shadows the
+following built-in maps:
+
+    `/`, `?`, `*`, `#`, `g*`, `g#`, `gd`, `gD`
+
+
+CUSTOMISATION                                   *searchlist-customisation*
+
+                                                *g:searchlist_maps*
+If you would prefer to disable some or all of the default maps, the
+`g:searchlist_maps` variable can be used.
+
+`let g:searchlist_maps = "none"`
+Do not remap any keys.
+
+`let g:searchlist_maps = "all"`
+Default, use the default set of maps.
+
+`let g:searchlist_maps = "search_only"`
+Only set search maps.
+
+`let g:searchlist_maps = "jump_only"`
+Only set jump maps (|g\|, |g/|).
+
+                                                *searchlist-custom-jump-maps*
+                                                *searchlist#JumpBackwards*
+                                                *searchlist#JumpForwards*
+If you want to create custom maps for jumping backwards/forwards in the
+searchlist, you can use the `searchlist#JumpBackwards` and
+`searchlist#JumpForwards` functions. For example:
+>
+    nnoremap <silent> <leader>sf :call searchlist#JumpForwards()<cr>
+    nnoremap <silent> <leader>sb :call searchlist#JumpBackwards()<cr>
+<
+
+                                                *searchlist-custom-search-maps*
+                                                *searchlist#AddEntry*
+
+If you already have maps inside your Neovim configuration that shadow the
+built-in Neovim search maps (see |searchlist-shadows|), you will probably
+require some extra configuration to get them to play nicely with this plugin.
+
+As an example, suppose that you have the following popular map in your Neovim
+configuration:
+>
+    nnoremap / /\v
+<
+To preserve this behaviour, but also have this plugin record your position in
+the searchlist, you would want something like this:
+>
+    function! CustomSearchBinding() abort
+        call searchlist#AddEntry()
+        return "/\\v"
+    endfunction
+
+    nnoremap <expr> / CustomSearchBinding()
+<
+
+
 TODO                                            *searchlist-todo*
 
 In no particular order:
 
-[ ] Complete docs
-[x] Do not add duplicate entries to the searchlist
 [ ] Find an alternative to `cursor()` that modifies the jumplist
-[ ] Squah bugs
+[ ] Squash bugs
+[x] Complete docs
+[x] Do not add duplicate entries to the searchlist
+
+
+ISSUES                                          *searchlist-issues*
+
+Raise an issue on GitHub if something's wrong.
 
  vim:tw=78:ts=8:ft=help:norl:
