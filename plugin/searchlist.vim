@@ -18,7 +18,7 @@ let g:loaded_searchlist = 1
 " Hook AddEntry in to the common search commands.
 function! s:CreateSearchBindings() abort
   for l:searchcmd in ["/", "?", "*", "#", "g*", "g#", "gd", "gD"]
-    exe "nnoremap <silent> " . l:searchcmd . " :call searchlist#AddEntry()<cr>" . l:searchcmd
+    exe "nnoremap " . l:searchcmd . " :call searchlist#AddEntry()<cr>" . l:searchcmd
   endfor
 endfunction
 
