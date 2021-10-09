@@ -12,16 +12,6 @@
 
 let s:mark_ns = nvim_create_namespace("searchlist")
 
-function! s:PushEntry() abort
-    let l:row = line(".")
-    let l:col = col(".")
-
-    let b:searchlist = get(b:, "searchlist", [])
-
-    let l:id = nvim_buf_set_extmark(0, s:mark_ns, l:row - 1, l:col - 1, {})
-    call add(b:searchlist, l:id)
-endfunction
-
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
@@ -36,7 +26,13 @@ function! searchlist#AddEntry() abort
     endif
 
     " Add the new entry.
-    call s:PushEntry()
+    let l:row = line(".")
+    let l:col = col(".")
+
+    let b:searchlist = get(b:, "searchlist", [])
+
+    let l:id = nvim_buf_set_extmark(0, s:mark_ns, l:row - 1, l:col - 1, {})
+    call add(b:searchlist, l:id)
 endfunction
 
 function searchlist#JumpBackwards() abort
