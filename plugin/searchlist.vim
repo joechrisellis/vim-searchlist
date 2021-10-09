@@ -16,32 +16,32 @@ endif
 let g:loaded_searchlist = 1
 
 " Hook AddEntry in to the common search commands.
-function! s:CreateSearchBindings() abort
+function! s:CreateSearchMaps() abort
     for l:searchcmd in ["/", "?", "*", "#", "g*", "g#", "gd", "gD"]
         exe "nnoremap " . l:searchcmd . " :call searchlist#AddEntry()<cr>" . l:searchcmd
     endfor
 endfunction
 
-" Create bindings for jumping back and forth in the searchlist.
-function! s:CreateJumpBindings() abort
+" Create maps for jumping back and forth in the searchlist.
+function! s:CreateJumpMaps() abort
     nnoremap <silent> g\ :call searchlist#JumpBackwards()<cr>
     nnoremap <silent> g/ :call searchlist#JumpForwards()<cr>
 endfunction
 
-function! s:CreateAllBindings() abort
-    call s:CreateSearchBindings()
-    call s:CreateJumpBindings()
+function! s:CreateAllMaps() abort
+    call s:CreateSearchMaps()
+    call s:CreateJumpMaps()
 endfunction
 
-" Users can change this if they want to set their own bindings or if they
-" already have bindings for the common search commands and want to tie them in
-" with nvim-searchlist.
-let g:searchlist_bindings = "all"
+" Users can change this if they want to set their own maps or if they already
+" have maps for the common search commands and want to tie them in with
+" nvim-searchlist.
+let g:searchlist_maps = "all"
 
-if g:searchlist_bindings ==? "all"
-    call s:CreateAllBindings()
-elseif g:searchlist_bindings ==? "search_only"
-    call s:CreateSearchBindings()
-elseif g:searchlist_bindings ==? "jump_only"
-    call s:CreateJumpBindings()
+if g:searchlist_maps ==? "all"
+    call s:CreateAllMaps()
+elseif g:searchlist_maps ==? "search_only"
+    call s:CreateSearchMaps()
+elseif g:searchlist_maps ==? "jump_only"
+    call s:CreateJumpMaps()
 endif
