@@ -16,7 +16,7 @@ TODO                                            *searchlist-todo*
 In no particular order:
 
 [ ] Complete docs
-[ ] Do not add duplicate entries to the searchlist
+[x] Do not add duplicate entries to the searchlist
 [ ] Find an alternative to `cursor()` that modifies the jumplist
 [ ] Squah bugs
 
