@@ -12,12 +12,6 @@
 
 let s:mark_ns = nvim_create_namespace("searchlist")
 
-function! s:OnVirtualEntry() abort
-    let b:searchlist = get(b:, "searchlist", [])
-    let b:searchlist_index = get(b:, "searchlist_index", 0)
-    return b:searchlist_index == len(b:searchlist)
-endfunction
-
 function! s:PushEntry() abort
     let l:row = line(".")
     let l:col = col(".")
@@ -35,7 +29,7 @@ function! searchlist#AddEntry() abort
     " Remove everything beyond our current searchlist index.
     let b:searchlist = b:searchlist[:b:searchlist_index]
 
-    if s:OnVirtualEntry()
+    if b:searchlist_index == len(b:searchlist)
         let b:searchlist_index += 1
     else
         let b:searchlist_index += 2
