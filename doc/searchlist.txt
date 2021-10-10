@@ -10,6 +10,9 @@ This plugin adds a searchlist to Neovim. The searchlist is similar to the
 jumplist, but instead of storing jumps, it stores the locations where you last
 initiated a search.
 
+Since a Vim search can only move within the current buffer, the searchlist is
+buffer-local.
+
 
 MAPS                                            *searchlist-maps*
 
