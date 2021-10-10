@@ -19,9 +19,9 @@ function! s:ZeroBasedToOneBased(num)
     return a:num + 1
 endfunction
 
-" Converts zero-based values to one-based values. YES, this is an extremely
-" simple function. However, reading s:ZeroBasedToOneBased(x) signals intent
-" far better than just x + 1.
+" Converts one-based values to zero-based values. YES, this is an extremely
+" simple function. However, reading s:OneBasedToZeroBased(x) signals intent
+" far better than just x - 1.
 function! s:OneBasedToZeroBased(num)
     return a:num - 1
 endfunction
@@ -45,7 +45,7 @@ function! searchlist#AddEntry() abort
         let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:last_id, {})
         if l:row == s:ZeroBasedToOneBased(l:last_row)
                     \ && l:col == s:ZeroBasedToOneBased(l:last_col)
-            let b:searchlist_index += 1
+            let b:searchlist_index = len(b:searchlist)
             return
         endif
     endif
@@ -53,7 +53,7 @@ function! searchlist#AddEntry() abort
     if b:searchlist_index == len(b:searchlist)
         let b:searchlist_index += 1
     else
-        let b:searchlist_index += 2
+        let b:searchlist_index = len(b:searchlist)
     endif
 
     " Add the new entry.
