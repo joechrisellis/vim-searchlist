@@ -70,11 +70,12 @@ function! searchlist#AddEntry() abort
     let b:searchlist_index = len(b:searchlist)
 endfunction
 
-" Jump backwards one position in the jumplist.
-function searchlist#JumpBackwards() abort
+" Jump backwards one position in the jumplist. Returns true if a jump was
+" made, false otherwise.
+function! s:JumpBackwardsOnce() abort
     let b:searchlist_index = get(b:, "searchlist_index", 0)
     if b:searchlist_index <= 0
-        return
+        return v:false
     endif
 
     let b:searchlist_index -= 1
@@ -87,14 +88,29 @@ function searchlist#JumpBackwards() abort
     "       be nice to find an alternative here.
     call cursor(s:ZeroBasedToOneBased(l:row),
                 \ s:ZeroBasedToOneBased(l:col))
+
+    return v:true
 endfunction
 
-" Jump forwards one position in the jumplist.
-function searchlist#JumpForwards() abort
+" Jump backwards count position in the jumplist.
+function! searchlist#JumpBackwards() abort
+    let l:i = 0
+    while l:i < v:count1
+        let l:made_jump = s:JumpBackwardsOnce()
+        if !l:made_jump
+            break
+        endif
+        let l:i += 1
+    endwhile
+endfunction
+
+" Jump forwards one position in the jumplist. Returns true if a jump was made,
+" false otherwise.
+function! s:JumpForwardsOnce() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
     if b:searchlist_index >= len(b:searchlist) - 1
-        return
+        return v:false
     endif
 
     let b:searchlist_index += 1
@@ -107,4 +123,18 @@ function searchlist#JumpForwards() abort
     "       be nice to find an alternative here.
     call cursor(s:ZeroBasedToOneBased(l:row),
                 \ s:ZeroBasedToOneBased(l:col))
+
+    return v:true
+endfunction
+
+" Jump forwards one position in the jumplist.
+function! searchlist#JumpForwards() abort
+    let l:i = 0
+    while l:i < v:count1
+        let l:made_jump = s:JumpForwardsOnce()
+        if !l:made_jump
+            break
+        endif
+        let l:i += 1
+    endwhile
 endfunction
