@@ -82,7 +82,6 @@ the searchlist, you would want something like this:
     nnoremap <expr> / CustomSearchBinding()
 <
 
-
 TODO                                            *searchlist-todo*
 
 In no particular order:
