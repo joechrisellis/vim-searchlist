@@ -85,6 +85,17 @@ the searchlist, you would want something like this:
     nnoremap <expr> / CustomSearchBinding()
 <
 
+IMPLEMENTATION                                  *searchlist-implementation*
+
+The plugin uses the fantastic Neovim |extmarks| to track mark where each
+search was initiated. Entries in the searchlist are therefore resistant to
+edits in the document and will do the "right thing" the vast majority of the
+time.
+
+This is the main reason why this plugin is a Neovim plugin rather than a Vim
+plugin. Neovim provides better tools for implementing such things.
+
+
 TODO                                            *searchlist-todo*
 
 In no particular order:
