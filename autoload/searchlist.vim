@@ -26,6 +26,7 @@ function! s:OneBasedToZeroBased(num)
     return a:num - 1
 endfunction
 
+" Adds the current cursor position as an entry to the searchlist.
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
@@ -69,6 +70,7 @@ function! searchlist#AddEntry() abort
     let b:searchlist_index = len(b:searchlist)
 endfunction
 
+" Jump backwards one position in the jumplist.
 function searchlist#JumpBackwards() abort
     let b:searchlist_index = get(b:, "searchlist_index", 0)
     if b:searchlist_index <= 0
@@ -81,10 +83,13 @@ function searchlist#JumpBackwards() abort
     let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
 
     " Move to the entry.
+    " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
+    "       be nice to find an alternative here.
     call cursor(s:ZeroBasedToOneBased(l:row),
                 \ s:ZeroBasedToOneBased(l:col))
 endfunction
 
+" Jump forwards one position in the jumplist.
 function searchlist#JumpForwards() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
@@ -98,6 +103,8 @@ function searchlist#JumpForwards() abort
     let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
 
     " Move to the entry.
+    " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
+    "       be nice to find an alternative here.
     call cursor(s:ZeroBasedToOneBased(l:row),
                 \ s:ZeroBasedToOneBased(l:col))
 endfunction
