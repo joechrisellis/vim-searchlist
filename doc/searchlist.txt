@@ -16,10 +16,12 @@ MAPS                                            *searchlist-maps*
 The plugin introduces two normal mode maps:
 
                                                 *g\*
-`g\`                    Jump to the previous position in the searchlist.
+`g\`                    Jump backwards [count] positions in the searchlist
+                      ([count] defaults to one).
 
                                                 *g/*
-`g/`                    Jump to the next position in the searchlist.
+`g/`                    Jump forwards [count] positions in the searchlist
+                      ([count] defaults to one).
 
                                                 *searchlist-shadows*
 In order to save positions to the searchlist, the plugin also shadows the
