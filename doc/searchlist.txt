@@ -3,8 +3,17 @@
 Author:  Joe Ellis
 License: Same terms as Vim itself (see |license|)
 
+CONTENTS                                        *searchlist* *searchlist-contents*
 
-INTRODUCTION                                    *searchlist*
+    INTRODUCTION...................................: |searchlist-introduction|
+    MAPS...................................................: |searchlist-maps|
+    CUSTOMISATION.................................: |searchlist-customisation|
+    IMPLEMENTATION...............................: |searchlist-implementation|
+    TODO...................................................: |searchlist-todo|
+    ISSUES...............................................: |searchlist-issues|
+
+
+INTRODUCTION                                    *searchlist-introduction*
 
 This plugin adds a searchlist to Neovim. The searchlist is similar to the
 jumplist, but instead of storing jumps, it stores the locations where you last
