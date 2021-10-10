@@ -6,6 +6,7 @@ License: Same terms as Vim itself (see |license|)
 CONTENTS                                        *searchlist* *searchlist-contents*
 
     INTRODUCTION...................................: |searchlist-introduction|
+    INSTALLATION...................................: |searchlist-installation|
     MAPS...................................................: |searchlist-maps|
     CUSTOMISATION.................................: |searchlist-customisation|
     IMPLEMENTATION...............................: |searchlist-implementation|
@@ -22,6 +23,20 @@ initiated a search.
 Since a Vim search can only move within the current buffer, the searchlist is
 buffer-local.
 
+
+INSTALLATION                                    *searchlist-installation*
+
+The easiest way to install the plugin is with a plugin manager.
+
+- vim-plug: https://github.com/junegunn/vim-plug
+- Vundle:   https://github.com/VundleVim/Vundle.vim
+
+If you use one, just follow the instructions in its documentation For
+example, if you use vim-plug, you would want to add the following line to your
+Vim configuration:
+>
+    Plug 'joechrisellis/nvim-searchlist'
+<
 
 MAPS                                            *searchlist-maps*
 
