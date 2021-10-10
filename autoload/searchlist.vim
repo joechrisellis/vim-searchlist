@@ -26,23 +26,31 @@ function! s:OneBasedToZeroBased(num)
     return a:num - 1
 endfunction
 
-function searchlist#Debug() abort
-    echo b:searchlist_index . " " .  join(b:searchlist)
-endfunction
-
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
     let b:searchlist_index = get(b:, "searchlist_index", 0)
 
-    let l:row = line(".")
-    let l:col = col(".")
+    let [l:row, l:col] = [line("."), col(".")]
 
     " Remove everything beyond our current searchlist index.
+    let l:ids_to_delete = b:searchlist[b:searchlist_index + 1:]
+    for l:id_to_delete in l:ids_to_delete
+        call nvim_buf_del_extmark(0,
+                    \ s:mark_ns,
+                    \ l:id_to_delete)
+    endfor
     let b:searchlist = b:searchlist[:b:searchlist_index]
 
+    " If the searchlist is not empty, check that the new top of the searchlist
+    " is not the same as the position we're currently at. If it is, we can
+    " return early to prevent adding duplicate entries to the searchlist.
     if !empty(b:searchlist)
         let l:last_id = b:searchlist[-1]
-        let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:last_id, {})
+        let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0,
+                    \ s:mark_ns,
+                    \ l:last_id,
+                    \ {})
+
         if l:row == s:ZeroBasedToOneBased(l:last_row)
                     \ && l:col == s:ZeroBasedToOneBased(l:last_col)
             let b:searchlist_index = len(b:searchlist)
@@ -50,15 +58,7 @@ function! searchlist#AddEntry() abort
         endif
     endif
 
-    if b:searchlist_index == len(b:searchlist)
-        let b:searchlist_index += 1
-    else
-        let b:searchlist_index = len(b:searchlist)
-    endif
-
     " Add the new entry.
-    let b:searchlist = get(b:, "searchlist", [])
-
     let l:id = nvim_buf_set_extmark(
                 \ 0,
                 \ s:mark_ns,
@@ -66,6 +66,7 @@ function! searchlist#AddEntry() abort
                 \ s:OneBasedToZeroBased(l:col),
                 \ {})
     call add(b:searchlist, l:id)
+    let b:searchlist_index = len(b:searchlist)
 endfunction
 
 function searchlist#JumpBackwards() abort
