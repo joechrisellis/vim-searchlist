@@ -1,5 +1,7 @@
 # nvim-searchlist
 
+![nvim-searchlist demo](https://github.com/joechrisellis/nvim-searchlist/blob/assets/assets/demo.gif)
+
 Adds a 'searchlist' to Neovim. It acts like the jumplist, but instead of
 storing jumps, stores the location where you last initiated a search.
 
