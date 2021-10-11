@@ -46,7 +46,9 @@ The plugin introduces two normal mode maps:
 
                                                 *g\*
 `g\`                    Jump backwards [count] positions in the searchlist
-                      ([count] defaults to one).
+                      ([count] defaults to one). If [count] is larger than the
+                      number of positions in the searchlist, go to the
+                      earliest search position.
 
                                                 *g/*
 `g/`                    Jump forwards [count] positions in the searchlist
