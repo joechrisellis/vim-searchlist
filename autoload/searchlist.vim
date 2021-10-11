@@ -10,6 +10,9 @@
 "
 "     :help searchlist
 
+" 100 is chosen for consistency with the jumplist.
+let g:searchlist_max_capacity = 100
+
 let s:mark_ns = nvim_create_namespace("searchlist")
 
 " Converts zero-based values to one-based values. YES, this is an extremely
@@ -26,6 +29,32 @@ function! s:OneBasedToZeroBased(num)
     return a:num - 1
 endfunction
 
+" Performs a 'rotating append' to a list -- i.e. if the list's maximum
+" capacity is exceeded after performing the append, the elements at the lower
+" indices are removed so that the list is not over capacity.
+function! s:RotatingAppend(list, elem, max_capacity) abort
+    let l:new_list = a:list
+    call add(l:new_list, a:elem)
+
+    let l:capacity = len(l:new_list)
+    let l:excess = l:capacity - a:max_capacity
+
+    let l:removed_elements = []
+    if l:excess >= 1
+        let l:removed_elements = l:new_list[:l:excess - 1]
+        let l:new_list = l:new_list[l:excess:]
+    endif
+
+    return [l:new_list, l:removed_elements]
+endfunction
+
+" Simple wrapper around nvim_buf_del_extmark that deletes a list of ids.
+function! s:BufDelExtmarks(buffer, mark_ns, ids) abort
+    for l:id in a:ids
+        call nvim_buf_del_extmark(a:buffer, a:mark_ns, l:id)
+    endfor
+endfunction
+
 " Adds the current cursor position as an entry to the searchlist.
 function! searchlist#AddEntry() abort
     let b:searchlist = get(b:, "searchlist", [])
@@ -35,11 +64,7 @@ function! searchlist#AddEntry() abort
 
     " Remove everything beyond our current searchlist index.
     let l:ids_to_delete = b:searchlist[b:searchlist_index + 1:]
-    for l:id_to_delete in l:ids_to_delete
-        call nvim_buf_del_extmark(0,
-                    \ s:mark_ns,
-                    \ l:id_to_delete)
-    endfor
+    call s:BufDelExtmarks(0, s:mark_ns, l:ids_to_delete)
     let b:searchlist = b:searchlist[:b:searchlist_index]
 
     " If the searchlist is not empty, check that the new top of the searchlist
@@ -59,15 +84,20 @@ function! searchlist#AddEntry() abort
         endif
     endif
 
-    " Add the new entry.
+    " Create a new extmark and add it as a new entry.
     let l:id = nvim_buf_set_extmark(
                 \ 0,
                 \ s:mark_ns,
                 \ s:OneBasedToZeroBased(l:row),
                 \ s:OneBasedToZeroBased(l:col),
                 \ {})
-    call add(b:searchlist, l:id)
+    let [b:searchlist, l:removed_elements] =
+                \ s:RotatingAppend(b:searchlist, l:id, g:searchlist_max_capacity)
     let b:searchlist_index = len(b:searchlist)
+
+    " Remove anything that was removed from the searchlist (because it didn't
+    " fit within the max capacity).
+    call s:BufDelExtmarks(0, s:mark_ns, l:removed_elements)
 endfunction
 
 " Jump backwards one position in the jumplist. Returns true if a jump was
