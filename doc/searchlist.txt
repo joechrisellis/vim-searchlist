@@ -21,7 +21,9 @@ jumplist, but instead of storing jumps, it stores the locations where you last
 initiated a search.
 
 Since a Vim search can only move within the current buffer, the searchlist is
-buffer-local.
+buffer-local. By default, the searchlist remembers 100 entries (the same as
+the jumplist), but this is configurable with the |g:searchlist_max_capacity|
+variable.
 
 
 INSTALLATION                                    *searchlist-installation*
@@ -108,6 +110,13 @@ the searchlist, you would want something like this:
 
     nnoremap <expr> / CustomSearchBinding()
 <
+                                                *g:searchlist_max_capacity*
+
+By default, the searchlist remembers the last 100 positions where you
+initiated the search (the same as the jumplist). You can change the maximum
+capacity of the jumplist by setting the `g:searchlist_max_capacity` variable
+appropriately.
+
 
 IMPLEMENTATION                                  *searchlist-implementation*
 
