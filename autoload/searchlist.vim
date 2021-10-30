@@ -13,12 +13,12 @@
 " 100 is chosen for consistency with the jumplist.
 let g:searchlist_max_capacity = 100
 
-let s:mark_ns = nvim_create_namespace("searchlist")
+let s:mark_ns = searchlist#mark#CreateNamespace("searchlist")
 
 " Simple wrapper around nvim_buf_del_extmark that deletes a list of ids.
 function! s:BufDelExtmarks(buffer, mark_ns, ids) abort
     for l:id in a:ids
-        call nvim_buf_del_extmark(a:buffer, a:mark_ns, l:id)
+        call searchlist#mark#DelMark(a:buffer, a:mark_ns, l:id)
     endfor
 endfunction
 
@@ -39,25 +39,20 @@ function! searchlist#AddEntry() abort
     " return early to prevent adding duplicate entries to the searchlist.
     if !empty(b:searchlist)
         let l:last_id = b:searchlist[-1]
-        let [l:last_row, l:last_col] = nvim_buf_get_extmark_by_id(0,
-                    \ s:mark_ns,
-                    \ l:last_id,
-                    \ {})
+        let [l:last_row, l:last_col] = searchlist#mark#GetMark(0, s:mark_ns, l:last_id)
 
-        if l:row == searchlist#utils#ZeroBasedToOneBased(l:last_row)
-                    \ && l:col == searchlist#utils#ZeroBasedToOneBased(l:last_col)
+        if l:row == l:last_row && l:col == l:last_col
             let b:searchlist_index = len(b:searchlist)
             return
         endif
     endif
 
     " Create a new extmark and add it as a new entry.
-    let l:id = nvim_buf_set_extmark(
+    let l:id = searchlist#mark#SetMark(
                 \ 0,
                 \ s:mark_ns,
-                \ searchlist#utils#OneBasedToZeroBased(l:row),
-                \ searchlist#utils#OneBasedToZeroBased(l:col),
-                \ {})
+                \ l:row,
+                \ l:col)
     let [b:searchlist, l:removed_elements] =
                 \ searchlist#utils#RotatingAppend(b:searchlist, l:id, g:searchlist_max_capacity)
     let b:searchlist_index = len(b:searchlist)
@@ -78,13 +73,12 @@ function! s:JumpBackwardsOnce() abort
     let b:searchlist_index -= 1
 
     let l:id = b:searchlist[b:searchlist_index]
-    let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
+    let [l:row, l:col] = searchlist#mark#GetMark(0, s:mark_ns, l:id)
 
     " Move to the entry.
     " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
     "       be nice to find an alternative here.
-    call cursor(searchlist#utils#ZeroBasedToOneBased(l:row),
-                \ searchlist#utils#ZeroBasedToOneBased(l:col))
+    call cursor(l:row, l:col)
 
     return v:true
 endfunction
@@ -113,13 +107,12 @@ function! s:JumpForwardsOnce() abort
     let b:searchlist_index += 1
 
     let l:id = b:searchlist[b:searchlist_index]
-    let [l:row, l:col] = nvim_buf_get_extmark_by_id(0, s:mark_ns, l:id, {})
+    let [l:row, l:col] = searchlist#mark#GetMark(0, s:mark_ns, l:id)
 
     " Move to the entry.
     " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
     "       be nice to find an alternative here.
-    call cursor(searchlist#utils#ZeroBasedToOneBased(l:row),
-                \ searchlist#utils#ZeroBasedToOneBased(l:col))
+    call cursor(l:row, l:col)
 
     return v:true
 endfunction
