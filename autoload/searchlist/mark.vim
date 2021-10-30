@@ -102,9 +102,7 @@ endfunction
 
 function! s:VimGetMark(buffer, ns_id, id) abort
     let l:id = a:ns_id + a:id
-    let l:props = {
-                \ 'id' : l:id,
-                \ }
+    let l:props = {'id' : l:id}
     if a:buffer != 0
         let l:props['bufnr'] = buffer
     endif
