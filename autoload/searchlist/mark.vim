@@ -130,7 +130,7 @@ endfunction
 " ----------------------------------------------------------------------------
 
 function! s:NvimDelMark(buffer, ns_id, id) abort
-    call nvim_buf_del_extmark(a:buffer, a:mark_ns, a:id)
+    call nvim_buf_del_extmark(a:buffer, a:ns_id, a:id)
 endfunction
 
 function! s:VimDelMark(buffer, ns_id, id) abort
