@@ -15,39 +15,6 @@ let g:searchlist_max_capacity = 100
 
 let s:mark_ns = nvim_create_namespace("searchlist")
 
-" Converts zero-based values to one-based values. YES, this is an extremely
-" simple function. However, reading s:ZeroBasedToOneBased(x) signals intent
-" far better than just x + 1.
-function! s:ZeroBasedToOneBased(num)
-    return a:num + 1
-endfunction
-
-" Converts one-based values to zero-based values. YES, this is an extremely
-" simple function. However, reading s:OneBasedToZeroBased(x) signals intent
-" far better than just x - 1.
-function! s:OneBasedToZeroBased(num)
-    return a:num - 1
-endfunction
-
-" Performs a 'rotating append' to a list -- i.e. if the list's maximum
-" capacity is exceeded after performing the append, the elements at the lower
-" indices are removed so that the list is not over capacity.
-function! s:RotatingAppend(list, elem, max_capacity) abort
-    let l:new_list = a:list
-    call add(l:new_list, a:elem)
-
-    let l:capacity = len(l:new_list)
-    let l:excess = l:capacity - a:max_capacity
-
-    let l:removed_elements = []
-    if l:excess >= 1
-        let l:removed_elements = l:new_list[:l:excess - 1]
-        let l:new_list = l:new_list[l:excess:]
-    endif
-
-    return [l:new_list, l:removed_elements]
-endfunction
-
 " Simple wrapper around nvim_buf_del_extmark that deletes a list of ids.
 function! s:BufDelExtmarks(buffer, mark_ns, ids) abort
     for l:id in a:ids
@@ -77,8 +44,8 @@ function! searchlist#AddEntry() abort
                     \ l:last_id,
                     \ {})
 
-        if l:row == s:ZeroBasedToOneBased(l:last_row)
-                    \ && l:col == s:ZeroBasedToOneBased(l:last_col)
+        if l:row == searchlist#utils#ZeroBasedToOneBased(l:last_row)
+                    \ && l:col == searchlist#utils#ZeroBasedToOneBased(l:last_col)
             let b:searchlist_index = len(b:searchlist)
             return
         endif
@@ -88,11 +55,11 @@ function! searchlist#AddEntry() abort
     let l:id = nvim_buf_set_extmark(
                 \ 0,
                 \ s:mark_ns,
-                \ s:OneBasedToZeroBased(l:row),
-                \ s:OneBasedToZeroBased(l:col),
+                \ searchlist#utils#OneBasedToZeroBased(l:row),
+                \ searchlist#utils#OneBasedToZeroBased(l:col),
                 \ {})
     let [b:searchlist, l:removed_elements] =
-                \ s:RotatingAppend(b:searchlist, l:id, g:searchlist_max_capacity)
+                \ searchlist#utils#RotatingAppend(b:searchlist, l:id, g:searchlist_max_capacity)
     let b:searchlist_index = len(b:searchlist)
 
     " Remove anything that was removed from the searchlist (because it didn't
@@ -116,8 +83,8 @@ function! s:JumpBackwardsOnce() abort
     " Move to the entry.
     " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
     "       be nice to find an alternative here.
-    call cursor(s:ZeroBasedToOneBased(l:row),
-                \ s:ZeroBasedToOneBased(l:col))
+    call cursor(searchlist#utils#ZeroBasedToOneBased(l:row),
+                \ searchlist#utils#ZeroBasedToOneBased(l:col))
 
     return v:true
 endfunction
@@ -151,8 +118,8 @@ function! s:JumpForwardsOnce() abort
     " Move to the entry.
     " NOTE: cursor(...) unfortunately does not modify the jumplist. It would
     "       be nice to find an alternative here.
-    call cursor(s:ZeroBasedToOneBased(l:row),
-                \ s:ZeroBasedToOneBased(l:col))
+    call cursor(searchlist#utils#ZeroBasedToOneBased(l:row),
+                \ searchlist#utils#ZeroBasedToOneBased(l:col))
 
     return v:true
 endfunction
