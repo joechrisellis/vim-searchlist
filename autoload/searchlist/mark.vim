@@ -18,6 +18,8 @@
 " a subset of the functionality implemented by extmarks and textprops
 " necessary for implementing the searchlist.
 
+let s:err_unsupported_version = "Your version of Vim is unsupported."
+
 let s:id = 0
 
 function! s:GetId() abort
@@ -42,8 +44,10 @@ endfunction
 function! searchlist#mark#CreateNamespace(name) abort
     if has("nvim")
         let l:retval = s:NvimCreateNamespace(a:name)
-    else
+    elseif has("textprop")
         let l:retval = s:VimCreateNamespace(a:name)
+    else
+        throw s:err_unsupported_version
     endif
     return l:retval
 endfunction
@@ -82,8 +86,10 @@ endfunction
 function! searchlist#mark#SetMark(buffer, ns_id, row, col) abort
     if has("nvim")
         let l:retval = s:NvimSetMark(a:buffer, a:ns_id, a:row, a:col)
-    else
+    elseif has("textprop")
         let l:retval = s:VimSetMark(a:buffer, a:ns_id, a:row, a:col)
+    else
+        throw s:err_unsupported_version
     endif
     return l:retval
 endfunction
@@ -119,8 +125,10 @@ endfunction
 function! searchlist#mark#GetMark(buffer, ns_id, id) abort
     if has("nvim")
         let l:retval = s:NvimGetMark(a:buffer, a:ns_id, a:id)
-    else
+    elseif has("textprop")
         let l:retval = s:VimGetMark(a:buffer, a:ns_id, a:id)
+    else
+        throw s:err_unsupported_version
     endif
     return l:retval
 endfunction
@@ -144,8 +152,10 @@ endfunction
 function! searchlist#mark#DelMark(buffer, ns_id, id) abort
     if has("nvim")
         let l:retval = s:NvimDelMark(a:buffer, a:ns_id, a:id)
-    else
+    elseif has("textprop")
         let l:retval = s:VimDelMark(a:buffer, a:ns_id, a:id)
+    else
+        throw s:err_unsupported_version
     endif
     return l:retval
 endfunction
