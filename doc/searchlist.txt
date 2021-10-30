@@ -1,4 +1,4 @@
-*nvim-searchlist.txt* Adds a searchlist to Neovim.
+*vim-searchlist.txt* Adds a searchlist to Vim/Neovim.
 
 Author:  Joe Ellis
 License: Same terms as Vim itself (see |license|)
@@ -16,7 +16,7 @@ CONTENTS                                        *searchlist* *searchlist-content
 
 INTRODUCTION                                    *searchlist-introduction*
 
-This plugin adds a searchlist to Neovim. The searchlist is similar to the
+This plugin adds a searchlist to Vim/Neovim. The searchlist is similar to the
 jumplist, but instead of storing jumps, it stores the locations where you last
 initiated a search.
 
@@ -37,7 +37,7 @@ If you use one, just follow the instructions in its documentation For
 example, if you use vim-plug, you would want to add the following line to your
 Vim configuration:
 >
-    Plug 'joechrisellis/nvim-searchlist'
+    Plug 'joechrisellis/vim-searchlist'
 <
 
 MAPS                                            *searchlist-maps*
@@ -93,22 +93,19 @@ searchlist, you can use the `searchlist#JumpBackwards` and
                                                 *searchlist-custom-search-maps*
                                                 *searchlist#AddEntry*
 
-If you already have maps inside your Neovim configuration that shadow the
-built-in Neovim search maps (see |searchlist-shadows|), you will probably
+If you already have maps inside your Vim/Neovim configuration that shadow the
+built-in Vim/Neovim search maps (see |searchlist-shadows|), you will probably
 require some extra configuration to get them to play nicely with this plugin.
 
-As an example, suppose that you have the following popular map in your Neovim
-configuration:
+As an example, suppose that you have the following popular map in your
+Vim/Neovim configuration:
 >
-    nnoremap / /\v
-<
-To preserve this behaviour, but also have this plugin record your position in
-the searchlist, you would want something like this:
+    nnoremap / /\v < To preserve this behaviour, but also have this plugin
+    record your position in the searchlist, you would want something like
+    this:
 >
-    function! CustomSearchBinding() abort
-        call searchlist#AddEntry()
-        return "/\\v"
-    endfunction
+    function! CustomSearchBinding() abort call searchlist#AddEntry() return
+    "/\\v" endfunction
 
     nnoremap <expr> / CustomSearchBinding()
 <
@@ -122,13 +119,10 @@ appropriately.
 
 IMPLEMENTATION                                  *searchlist-implementation*
 
-The plugin uses the fantastic Neovim |extmarks| to track mark where each
-search was initiated. Entries in the searchlist are therefore resistant to
-edits in the document and will do the "right thing" the vast majority of the
-time.
-
-This is the main reason why this plugin is a Neovim plugin rather than a Vim
-plugin. Neovim provides better tools for implementing such things.
+In Vim, the plugin uses |text-properties|. In Neovim, the plugin uses
+|extmarks|. In both cases, these are used to track where each search was
+initiated. Entries in the searchlist are therefore resistant to edits in the
+document and will do the "right thing" the vast majority of the time.
 
 
 TODO                                            *searchlist-todo*
