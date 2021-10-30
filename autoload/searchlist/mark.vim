@@ -134,8 +134,13 @@ function! s:NvimDelMark(buffer, ns_id, id) abort
 endfunction
 
 function! s:VimDelMark(buffer, ns_id, id) abort
-    let l:id = a:ns_id + l:id
-    call prop_remove({'id' : l:id, 'type' : 'searchlist', 'bufnr' : a:buffer})
+    let l:id = a:ns_id + a:id
+    let l:props = {'id' : l:id}
+    if a:buffer != 0
+        let l:props['bufnr'] = a:buffer
+    endif
+
+    call prop_remove(l:props)
 endfunction
 
 function! searchlist#mark#DelMark(buffer, ns_id, id) abort
