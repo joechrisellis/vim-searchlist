@@ -15,7 +15,7 @@ let g:searchlist_max_capacity = 100
 
 let s:mark_ns = searchlist#mark#CreateNamespace("searchlist")
 
-" Simple wrapper around nvim_buf_del_extmark that deletes a list of ids.
+" Simple wrapper around searchlist#mark#DelMark that deletes a list of ids.
 function! s:BufDelExtmarks(buffer, mark_ns, ids) abort
     for l:id in a:ids
         call searchlist#mark#DelMark(a:buffer, a:mark_ns, l:id)
