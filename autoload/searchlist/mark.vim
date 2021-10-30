@@ -63,14 +63,19 @@ endfunction
 function! s:VimSetMark(buffer, ns_id, row, col) abort
     let l:id = s:GetId()
     let l:namespaced_id = a:ns_id + l:id
+
+    let l:props = {
+                \ 'id' : l:namespaced_id,
+                \ 'type': 'searchlist',
+                \ }
+    if a:buffer != 0
+        let l:props['bufnr'] = a:buffer
+    endif
+
     call prop_add(
                 \ a:row,
                 \ a:col,
-                \ {
-                    \ 'id' : l:namespaced_id,
-                    \ 'bufnr': a:buffer,
-                    \ 'type': 'searchlist',
-                    \ })
+                \ l:props)
     return l:id
 endfunction
 
@@ -97,10 +102,18 @@ endfunction
 
 function! s:VimGetMark(buffer, ns_id, id) abort
     let l:id = a:ns_id + a:id
-    " NOTE: Vim's API here is really stupid.
-    let l:prop = prop_find({'id' : l:id, 'bufnr' : a:buffer}, 'b')
+    let l:props = {
+                \ 'id' : l:id,
+                \ }
+    if a:buffer != 0
+        let l:props['bufnr'] = buffer
+    endif
+
+    " NOTE: Vim's API here is really dumb -- we have to search backwards, and
+    "       if we don't find anything, we search forward.
+    let l:prop = prop_find(l:props, 'b')
     if empty(l:prop)
-        let l:prop = prop_find({'id' : l:id, 'bufnr' : a:buffer}, 'f')
+        let l:prop = prop_find(l:props, 'f')
     endif
     return [l:prop["lnum"], l:prop["col"]]
 endfunction
