@@ -100,12 +100,15 @@ require some extra configuration to get them to play nicely with this plugin.
 As an example, suppose that you have the following popular map in your
 Vim/Neovim configuration:
 >
-    nnoremap / /\v < To preserve this behaviour, but also have this plugin
-    record your position in the searchlist, you would want something like
-    this:
+    nnoremap / /\v
+<
+To preserve this behaviour, but also have this plugin record your position in
+the searchlist, you would want something like this:
 >
-    function! CustomSearchBinding() abort call searchlist#AddEntry() return
-    "/\\v" endfunction
+    function! CustomSearchBinding() abort
+        call searchlist#AddEntry()
+        return "/\\v"
+    endfunction
 
     nnoremap <expr> / CustomSearchBinding()
 <
