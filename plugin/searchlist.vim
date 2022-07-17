@@ -42,7 +42,9 @@ endfunction
 " Users can change this if they want to set their own maps or if they already
 " have maps for the common search commands and want to tie them in with
 " vim-searchlist.
-let g:searchlist_maps = "all"
+if !exists("g:searchlist_maps")
+    let g:searchlist_maps = "all"
+endif
 
 if g:searchlist_maps ==? "all"
     call s:CreateAllMaps()
