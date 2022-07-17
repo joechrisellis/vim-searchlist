@@ -20,12 +20,6 @@ function! s:CreateSearchMaps() abort
     for l:searchcmd in ["/", "?", "*", "#", "g*", "g#"]
         exe "nnoremap " . l:searchcmd . " :<C-u>call searchlist#AddEntry()<cr>" . l:searchcmd
     endfor
-    " gd and gD don't write to the command-line when they are used, so we have
-    " to include <silent> in their mappings (otherwise, we'll end up seeing
-    " :call searchlist#AddEntry() in the command-line)
-    for l:searchcmd in ["gd", "gD"]
-        exe "nnoremap <silent> " . l:searchcmd . " :<C-u>call searchlist#AddEntry()<cr>" . l:searchcmd
-    endfor
 endfunction
 
 " Create maps for jumping back and forth in the searchlist.
